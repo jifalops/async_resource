@@ -3,8 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:async_resource/async_resource.dart';
 
-export 'package:async_resource/async_resource.dart';
-
 /// Wraps a [File] on a file system.
 class FileResource<T> extends LocalResource<T> {
   FileResource(this.file,

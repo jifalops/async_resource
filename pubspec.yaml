@@ -8,6 +8,7 @@ dependencies:
   http: ^0.11.3+16
   meta: ^1.1.5
   path: ^1.6.1
+  service_worker: ^0.2.2
 
 dev_dependencies:
   mockito: ^3.0.0-beta+3

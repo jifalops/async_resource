@@ -6,28 +6,33 @@ import 'package:async_resource/async_resource.dart';
 
 /// Represents storage options for a browser.
 class SwBrowserResource<T> extends LocalResource<T> {
-  SwBrowserResource(String path, {Parser<T> parse})
-      : request = sw.Request(path),
-        super(path: path, parse: parse);
+  SwBrowserResource(this.name, String url, {Parser<T> parse})
+      : super(path: url, parse: parse);
 
-  final sw.Request request;
+  final String name;
+  sw.Cache _cache;
 
-  // TODO: implement exists
+  Future<sw.Cache> get cache async => _cache ??= await sw.caches.open(name);
+  Future<sw.Response> get contentResponse async => (await cache).match(path);
+  Future<sw.Response> get modTimeResponse async =>
+      (await cache).match(path + '/modTime');
+
   @override
-  Future<bool> get exists =>
-      sw.caches.open(path).then((cache) => cache.put(path, sw.Response('')));
+  Future<bool> get exists async => (await contentResponse).ok;
 
   @override
-  Future fetchContents() {
-    // TODO: implement fetchContents
+  Future fetchContents() async => (await contentResponse).body;
+
+  @override
+  Future<DateTime> get lastModified async {
+    final modTime = await modTimeResponse;
+    return modTime.ok ? DateTime.parse(modTime.body) : null;
   }
 
-  // TODO: implement lastModified
   @override
-  Future<DateTime> get lastModified => null;
-
-  @override
-  Future<void> write(contents) {
-    // TODO: implement write
+  Future<void> write(contents) async {
+    final c = await cache;
+    c.put(path, sw.Response(contents));
+    c.put(path + '/modTime', sw.Response(DateTime.now()));
   }
 }

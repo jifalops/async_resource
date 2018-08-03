@@ -1,5 +1,3 @@
-library async_resource;
-
 import 'dart:io';
 import 'dart:async';
 import 'dart:convert';

@@ -1,5 +1,3 @@
-library async_resource;
-
 import 'dart:async';
 import 'dart:html';
 import 'package:meta/meta.dart';

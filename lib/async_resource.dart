@@ -42,7 +42,7 @@ abstract class LocalResource<T> extends AsyncResource<T> {
   @override
   Future<T> get({bool forceReload: false}) async {
     if (_data == null || forceReload) {
-      _data = parseContents(await fetchContents());
+      _update(await fetchContents());
     }
     return _data;
   }
@@ -55,6 +55,9 @@ abstract class LocalResource<T> extends AsyncResource<T> {
   T parseContents(dynamic contents) =>
       parser == null ? contents : parser(contents);
 
+  /// For internal parsing before calling [parseContents].
+  dynamic preParseContents(dynamic contents) => contents;
+
   /// This resource's path on the system.
   String get path => location;
 
@@ -66,8 +69,11 @@ abstract class LocalResource<T> extends AsyncResource<T> {
   /// Returns `null` if [exists] is `false`.
   Future<DateTime> get lastModified;
 
-  /// Persist the contents to disk.
-  Future<void> write(dynamic contents);
+  /// Persist the contents to disk. Call super *after* performing the write.
+  @mustCallSuper
+  Future<T> write(dynamic contents) async => _update(contents);
+
+  T _update(contents) => _data = parseContents(preParseContents(contents));
 }
 
 /// Network resources are fetched from the network and will cache a local copy.
@@ -123,9 +129,10 @@ abstract class NetworkResource<T> extends AsyncResource<T> {
         print('$url Fetched.');
         if (!skipCacheWrite) {
           print('Updating cache...');
-          cache.write(contents);
+          return cache.write(contents);
+        } else {
+          return cache._update(contents);
         }
-        return cache._data = cache.parseContents(preParseContents(contents));
       } else {
         if (allowCacheFallback) {
           print('$url Using a cached copy if available.');
@@ -140,9 +147,6 @@ abstract class NetworkResource<T> extends AsyncResource<T> {
       return cache.get();
     }
   }
-
-  /// For internal parsing before calling [cache.parseContents].
-  dynamic preParseContents(dynamic contents) => contents;
 }
 
 enum CacheStrategy { networkFirst, cacheFirst }

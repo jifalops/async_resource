@@ -64,11 +64,12 @@ class ServiceWorkerCacheEntry<T> extends LocalResource<T> {
 
   /// [contents] must be of type [sw.Response].
   @override
-  Future<void> write(resp) async {
+  Future<T> write(resp) async {
     assert(resp is sw.Response);
     final r = resp?.clone();
     _response = r;
-    (await cache)?.put(url, r);
+    await (await cache)?.put(url, r);
+    return super.write(resp);
   }
 }
 
@@ -110,11 +111,12 @@ class StorageEntry<T> extends LocalResource<T> {
       saveLastModified ? DateTime.tryParse(map[key + '_modified']) : null;
 
   @override
-  Future<void> write(contents) async {
+  Future<T> write(contents) async {
     map[key] = contents;
     if (saveLastModified) {
       map[key + '_modified'] = DateTime.now().toIso8601String();
     }
+    return super.write(contents);
   }
 }
 
@@ -125,6 +127,3 @@ class StorageType {
   const StorageType._(this.name);
   final String name;
 }
-
-
-

@@ -26,9 +26,12 @@ class FileResource<T> extends LocalResource<T> {
   Future<DateTime> get lastModified => file.lastModified();
 
   @override
-  Future<void> write(contents) => binary
-      ? file.writeAsBytes(contents, flush: flushOnWrite)
-      : file.writeAsString(contents, flush: flushOnWrite, encoding: encoding);
+  Future<T> write(contents) {
+    binary
+        ? file.writeAsBytes(contents, flush: flushOnWrite)
+        : file.writeAsString(contents, flush: flushOnWrite, encoding: encoding);
+    return super.write(contents);
+  }
 
   @override
   Future fetchContents() =>

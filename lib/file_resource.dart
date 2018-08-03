@@ -1,3 +1,5 @@
+library async_resource;
+
 import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
@@ -6,15 +8,14 @@ import 'package:async_resource/async_resource.dart';
 /// Wraps a [File] on a file system.
 class FileResource<T> extends LocalResource<T> {
   FileResource(this.file,
-      {this.binary: false,
-      this.encoding: utf8,
-      this.flushOnWrite: false,
-      Parser<T> parse})
-      : super(path: file.path, parse: parse);
+      {this.binary: false, this.encoding: utf8, this.flushOnWrite: false})
+      : super(path: file.path);
 
   final File file;
   final bool binary;
   final bool flushOnWrite;
+
+  /// Only used if [binary] is `false`.
   final Encoding encoding;
 
   @override

@@ -30,8 +30,8 @@ class ServiceWorkerResource<T> extends NetworkResource<T> {
 /// The cache entry for a [url] in a service worker.
 class ServiceWorkerCacheEntry<T> extends LocalResource<T> {
   ServiceWorkerCacheEntry(
-      {@required this.name, @required String url, this.maxAge})
-      : super(path: url);
+      {@required this.name, @required String url, this.maxAge, Parser parser})
+      : super(path: url, parser: parser);
 
   /// The name of the cache to use.
   final String name;

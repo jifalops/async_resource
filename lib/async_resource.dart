@@ -6,6 +6,10 @@ import 'package:meta/meta.dart';
 
 export 'src/http_network_resource.dart';
 
+/// [contents] will either be a [String] or [List<int>], depending on whether
+/// the underlying resource is binary or string based.
+typedef T Parser<T>(dynamic contents);
+
 /// An [AsyncResource] represents data from the network or disk such as a native
 /// I/O File, browser service-worker cache, or browser local storage.
 abstract class AsyncResource<T> {
@@ -27,11 +31,13 @@ abstract class AsyncResource<T> {
 
 /// A local resources such as a native file or browser cache.
 abstract class LocalResource<T> extends AsyncResource<T> {
-  LocalResource({@required String path}) : super(location: path);
+  LocalResource({@required String path, this.parser}) : super(location: path);
 
   /// Synchronously get the most recently loaded data.
   T get data => _data;
   T _data;
+
+  final Parser<T> parser;
 
   @override
   Future<T> get({bool forceReload: false}) async {
@@ -46,7 +52,8 @@ abstract class LocalResource<T> extends AsyncResource<T> {
   ///
   /// The default implementation simply returns [contents]. Implementations
   /// should override this to return [T].
-  T parseContents(dynamic contents) => contents;
+  T parseContents(dynamic contents) =>
+      parser == null ? contents : parser(contents);
 
   /// This resource's path on the system.
   String get path => location;

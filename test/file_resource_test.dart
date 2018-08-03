@@ -41,7 +41,7 @@ void main() {
       client: client,
       url: stringPath,
       cache: new FileResource(stringListFile,
-          parse: (contents) => contents.split(new RegExp(r'\r?\n'))));
+          parser: (contents) => contents.split(new RegExp(r'\r?\n'))));
   final binaryRes = new HttpNetworkResource(
       client: client, url: binaryPath, cache: new FileResource(binaryFile));
 

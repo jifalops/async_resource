@@ -8,8 +8,11 @@ import 'package:async_resource/async_resource.dart';
 /// Wraps a [File] on a file system.
 class FileResource<T> extends LocalResource<T> {
   FileResource(this.file,
-      {this.binary: false, this.encoding: utf8, this.flushOnWrite: false})
-      : super(path: file.path);
+      {this.binary: false,
+      this.encoding: utf8,
+      this.flushOnWrite: false,
+      Parser parser})
+      : super(path: file.path, parser: parser);
 
   final File file;
   final bool binary;

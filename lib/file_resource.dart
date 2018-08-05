@@ -1,7 +1,10 @@
-import 'dart:io';
-import 'dart:async';
-import 'dart:convert';
+import 'dart:io' show File;
+import 'dart:async' show Future;
+import 'dart:convert' show Encoding, utf8;
 import 'package:async_resource/async_resource.dart';
+
+export 'package:async_resource/async_resource.dart';
+export 'dart:io' show File;
 
 /// Wraps a [File] on a file system.
 class FileResource<T> extends LocalResource<T> {

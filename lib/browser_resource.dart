@@ -4,6 +4,8 @@ import 'package:meta/meta.dart';
 import 'package:service_worker/worker.dart' as sw;
 import 'package:async_resource/async_resource.dart';
 
+export 'package:async_resource/async_resource.dart';
+
 /// A network resource fetched and cached by a service worker in a browser
 /// environment.
 class ServiceWorkerResource<T> extends NetworkResource<T> {
@@ -17,13 +19,6 @@ class ServiceWorkerResource<T> extends NetworkResource<T> {
 
   @override
   Future fetchContents() => sw.fetch(url);
-
-  /// [contents] must be a [sw.Response].
-  @override
-  preParseContents(contents) {
-    assert(contents is sw.Response);
-    return contents.body;
-  }
 }
 
 /// The cache entry for a [url] in a service worker.
@@ -70,6 +65,13 @@ class ServiceWorkerCacheEntry<T> extends LocalResource<T> {
     _response = r;
     await (await cache)?.put(url, r);
     return super.write(resp);
+  }
+
+  /// [contents] must be a [sw.Response].
+  @override
+  preParseContents(contents) {
+    assert(contents is sw.Response);
+    return contents.body;
   }
 }
 

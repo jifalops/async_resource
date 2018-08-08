@@ -12,7 +12,7 @@ class FileResource<T> extends LocalResource<T> {
       {this.binary: false,
       this.encoding: utf8,
       this.flushOnWrite: false,
-      Parser parser})
+      Parser<T> parser})
       : super(path: file.path, parser: parser);
 
   final File file;
@@ -34,6 +34,12 @@ class FileResource<T> extends LocalResource<T> {
         ? file.writeAsBytes(contents, flush: flushOnWrite)
         : file.writeAsString(contents, flush: flushOnWrite, encoding: encoding);
     return super.write(contents);
+  }
+
+  @override
+  Future<void> delete() async {
+    await file.delete();
+    super.delete();
   }
 
   @override

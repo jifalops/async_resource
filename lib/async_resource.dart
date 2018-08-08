@@ -69,7 +69,15 @@ abstract class LocalResource<T> extends AsyncResource<T> {
   /// Returns `null` if [exists] is `false`.
   Future<DateTime> get lastModified;
 
-  /// Persist the contents to disk. Call super *after* performing the write.
+  /// Remove this resource from disk and sets [data] to `null`.
+  ///
+  /// Implementations should call super *after* performing the delete.
+  @mustCallSuper
+  Future<void> delete() async => _data = null;
+
+  /// Persist the contents to disk.
+  ///
+  /// Implementations should call super *after* performing the write.
   @mustCallSuper
   Future<T> write(dynamic contents) async => _update(contents);
 

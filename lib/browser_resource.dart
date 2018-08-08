@@ -24,7 +24,10 @@ class ServiceWorkerResource<T> extends NetworkResource<T> {
 /// The cache entry for a [url] in a service worker.
 class ServiceWorkerCacheEntry<T> extends LocalResource<T> {
   ServiceWorkerCacheEntry(
-      {@required this.name, @required String url, this.maxAge, Parser parser})
+      {@required this.name,
+      @required String url,
+      this.maxAge,
+      Parser<T> parser})
       : super(path: url, parser: parser);
 
   /// The name of the cache to use.
@@ -67,6 +70,12 @@ class ServiceWorkerCacheEntry<T> extends LocalResource<T> {
     return super.write(resp);
   }
 
+  @override
+  Future<void> delete() async {
+    (await cache).delete(url);
+    return super.delete();
+  }
+
   /// [contents] must be a [sw.Response].
   @override
   preParseContents(contents) {
@@ -87,7 +96,7 @@ class StorageEntry<T> extends LocalResource<T> {
       {@required this.key,
       this.type: StorageType.localStorage,
       this.saveLastModified: false,
-      Parser parser})
+      Parser<T> parser})
       : super(path: type.name, parser: parser);
 
   final StorageType type;
@@ -96,29 +105,41 @@ class StorageEntry<T> extends LocalResource<T> {
   /// Create a duplicate storage entry when this entry is written.
   final bool saveLastModified;
 
-  Map<String, String> get map => type == StorageType.localStorage
+  /// The storage key for modification time when [saveLastModified] is `true`.
+  String get modifiedKey => '${key}_modified';
+
+  Storage get storage => type == StorageType.localStorage
       ? window.localStorage
       : window.sessionStorage;
 
-  String get value => map[key];
+  String get value => storage[key];
 
   @override
-  Future<bool> get exists async => map.containsKey(key);
+  Future<bool> get exists async => storage.containsKey(key);
 
   @override
   Future fetchContents() async => value;
 
   @override
   Future<DateTime> get lastModified async =>
-      saveLastModified ? DateTime.tryParse(map[key + '_modified']) : null;
+      saveLastModified ? DateTime.tryParse(storage[modifiedKey]) : null;
 
   @override
   Future<T> write(contents) async {
-    map[key] = contents;
+    storage[key] = contents;
     if (saveLastModified) {
-      map[key + '_modified'] = DateTime.now().toIso8601String();
+      storage[modifiedKey] = DateTime.now().toIso8601String();
     }
     return super.write(contents);
+  }
+
+  @override
+  Future<void> delete() async {
+    storage.remove(key);
+    if (saveLastModified) {
+      storage.remove(modifiedKey);
+    }
+    return super.delete();
   }
 }
 

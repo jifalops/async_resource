@@ -127,7 +127,7 @@ abstract class NetworkResource<T> extends AsyncResource<T> {
       bool allowCacheFallback: true,
       bool skipCacheWrite: false}) async {
     if (cache.data != null && !forceReload) {
-      print('${cache.basename}: Using previously loaded value.');
+      // print('${cache.basename}: Using previously loaded value.');
       return cache.data;
     } else if (forceReload ||
         strategy == CacheStrategy.networkFirst ||

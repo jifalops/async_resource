@@ -26,7 +26,8 @@ class FileResource<T> extends LocalResource<T> {
   Future<bool> get exists => file.exists();
 
   @override
-  Future<DateTime> get lastModified => file.lastModified();
+  Future<DateTime> get lastModified async =>
+      (await exists) ? file.lastModified() : null;
 
   @override
   Future<T> write(contents) {

@@ -79,7 +79,13 @@ abstract class LocalResource<T> extends AsyncResource<T> {
   ///
   /// Implementations should call super *after* performing the write.
   @mustCallSuper
-  Future<T> write(dynamic contents) async => _update(contents);
+  Future<T> write(dynamic contents) async {
+    exists.then((result) {
+      if (!result) print('Warning: Write completed but target does not exist.');
+    });
+
+    return _update(contents);
+  }
 
   T _update(contents) => _data = parseContents(preParseContents(contents));
 }

@@ -1,3 +1,7 @@
+## [0.0.4] - August 11, 2018
+
+* Fix FileResource.lastModified to check for existence first.
+
 ## [0.0.3] - August 7, 2018
 
 * Add delete method to local resources.

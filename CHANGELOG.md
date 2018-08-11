@@ -1,3 +1,7 @@
+## [0.0.4+1] - August 11, 2018
+
+* Warn if local resource does not exist 3 seconds after write.
+
 ## [0.0.4] - August 11, 2018
 
 * Fix FileResource.lastModified to check for existence first.

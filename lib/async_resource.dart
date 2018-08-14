@@ -39,6 +39,10 @@ abstract class LocalResource<T> extends AsyncResource<T> {
 
   final Parser<T> parser;
 
+  /// Allows [NetworkResource] to define the parser, which is more natural to
+  /// use.
+  Parser<T> _parserOverride;
+
   @override
   Future<T> get({bool forceReload: false}) async {
     if (_data == null || forceReload) {
@@ -52,8 +56,9 @@ abstract class LocalResource<T> extends AsyncResource<T> {
   ///
   /// The default implementation simply returns [contents]. Implementations
   /// should override this to return [T].
-  T parseContents(dynamic contents) =>
-      parser == null ? contents : parser(contents);
+  T parseContents(dynamic contents) => _parserOverride != null
+      ? _parserOverride(contents)
+      : (parser != null ? parser(contents) : contents);
 
   /// For internal parsing before calling [parseContents].
   dynamic preParseContents(dynamic contents) => contents;
@@ -100,9 +105,12 @@ abstract class NetworkResource<T> extends AsyncResource<T> {
       {@required String url,
       @required this.cache,
       this.maxAge,
-      CacheStrategy strategy})
+      CacheStrategy strategy,
+      this.parser})
       : strategy = strategy ?? CacheStrategy.networkFirst,
-        super(location: url);
+        super(location: url) {
+    cache._parserOverride = parser;
+  }
 
   /// The local copy of the data fetched from [url].
   final LocalResource<T> cache;
@@ -111,6 +119,11 @@ abstract class NetworkResource<T> extends AsyncResource<T> {
   final Duration maxAge;
 
   final CacheStrategy strategy;
+
+  /// This parser will override the [cache.parser].
+  final Parser<T> parser;
+
+  T get data => cache.data;
 
   /// The location of the data to fetch and cache.
   String get url => location;

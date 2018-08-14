@@ -1,3 +1,7 @@
+## [0.0.5] - August 14, 2018
+
+* Add `data` getter and `parser` parameter to `NetworkResource`.
+
 ## [0.0.4+1] - August 11, 2018
 
 * Warn if local resource does not exist 3 seconds after write.

@@ -10,13 +10,19 @@ class HttpNetworkResource<T> extends NetworkResource<T> {
       @required LocalResource<T> cache,
       Duration maxAge,
       CacheStrategy strategy,
+      Parser parser,
       this.client,
       this.headers,
       this.binary: false,
       this.acceptedResponses: const [200]})
       : assert(binary != null),
         assert(acceptedResponses != null),
-        super(url: url, cache: cache, maxAge: maxAge, strategy: strategy);
+        super(
+            url: url,
+            cache: cache,
+            maxAge: maxAge,
+            strategy: strategy,
+            parser: parser);
 
   /// Optional. The [http.Client] to use, recommended if frequently hitting
   /// the same server. If not specified, [http.get()] will be used instead.

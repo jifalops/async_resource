@@ -10,12 +10,15 @@ export 'package:async_resource/async_resource.dart';
 /// environment.
 class ServiceWorkerResource<T> extends NetworkResource<T> {
   ServiceWorkerResource(
-      {@required ServiceWorkerCacheEntry<T> cache, CacheStrategy strategy})
+      {@required ServiceWorkerCacheEntry<T> cache,
+      CacheStrategy strategy,
+      Parser parser})
       : super(
             url: cache.url,
             cache: cache,
             maxAge: cache.maxAge,
-            strategy: strategy);
+            strategy: strategy,
+            parser: parser);
 
   @override
   Future fetchContents() => sw.fetch(url);

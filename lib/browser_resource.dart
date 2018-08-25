@@ -38,8 +38,10 @@ class ServiceWorkerCacheEntry<T> extends LocalResource<T> {
   final Duration maxAge;
   sw.Cache _cache;
   sw.Response _response;
+  String _responseText;
+  static const _modifiedKey = 'date';
 
-  String get url => location;
+  String get url => path;
 
   Future<sw.Cache> get cache async => _cache ??= await sw.caches.open(name);
   Future<sw.Response> get response async =>
@@ -51,14 +53,13 @@ class ServiceWorkerCacheEntry<T> extends LocalResource<T> {
   Future<bool> get isExpired async => hasExpired(await lastModified, maxAge);
 
   @override
-  Future fetchContents() async => (await response)?.clone()?.body;
+  Future fetchContents() async => await (await response)?.clone()?.text();
 
   @override
   Future<DateTime> get lastModified async {
-    final resp = await response;
-    final headers = resp?.headers;
-    if (headers != null && headers.has('date')) {
-      return DateTime.tryParse(headers['date']);
+    final headers = (await response)?.headers;
+    if (headers != null && headers.has(_modifiedKey)) {
+      return DateTime.tryParse(headers[_modifiedKey]);
     }
     return null;
   }
@@ -67,10 +68,11 @@ class ServiceWorkerCacheEntry<T> extends LocalResource<T> {
   @override
   Future<T> write(resp) async {
     assert(resp is sw.Response);
-    final r = resp?.clone();
-    _response = r;
-    await (await cache)?.put(url, r);
-    return super.write(resp);
+    _response = await resp
+        ?.cloneWith(headers: {_modifiedKey: DateTime.now().toIso8601String()});
+    _responseText = await resp?.text();
+    await (await cache)?.put(url, _response);
+    return super.write(_response);
   }
 
   @override
@@ -79,12 +81,9 @@ class ServiceWorkerCacheEntry<T> extends LocalResource<T> {
     return super.delete();
   }
 
-  /// [contents] must be a [sw.Response].
   @override
-  preParseContents(contents) {
-    assert(contents is sw.Response);
-    return contents.body;
-  }
+  preParseContents(contents) =>
+      contents is sw.Response ? _responseText : contents;
 }
 
 bool _isValid(sw.Response response) {

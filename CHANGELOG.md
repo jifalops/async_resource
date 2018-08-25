@@ -1,3 +1,7 @@
+## [0.1.2] - August 25, 2018
+
+* Add examples to README.
+
 ## [0.1.1] - August 25, 2018
 
 * Fix: catch platform layer errors (network/local) during `fetchContents()`.

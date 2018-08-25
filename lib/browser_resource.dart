@@ -104,9 +104,8 @@ bool _isValid(sw.Response response) {
 
 /// A single entry in a [window.localStorage] or [window.sessionStorage] map.
 class StorageEntry<T> extends LocalResource<T> {
-  StorageEntry(
-      {@required this.key,
-      this.type: StorageType.localStorage,
+  StorageEntry(this.key,
+      {this.type: StorageType.localStorage,
       this.saveLastModified: false,
       Parser<T> parser})
       : super(path: type.name, parser: parser);

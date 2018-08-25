@@ -30,15 +30,19 @@ class ServiceWorkerCacheEntry<T> extends LocalResource<T> {
       {@required this.name,
       @required String url,
       this.maxAge,
+      this.binary: false,
       Parser<T> parser})
       : super(path: url, parser: parser);
 
   /// The name of the cache to use.
   final String name;
   final Duration maxAge;
+
+  /// The data is either in bytes or a string.
+  final bool binary;
   sw.Cache _cache;
   sw.Response _response;
-  String _responseText;
+  dynamic _responseContents;
   static const _modifiedKey = 'date';
 
   String get url => path;
@@ -53,7 +57,10 @@ class ServiceWorkerCacheEntry<T> extends LocalResource<T> {
   Future<bool> get isExpired async => hasExpired(await lastModified, maxAge);
 
   @override
-  Future fetchContents() async => await (await response)?.clone()?.text();
+  Future fetchContents() async {
+    final resp = (await response)?.clone();
+    return binary ? (await resp?.arrayBuffer())?.asUint8List() : resp?.text();
+  }
 
   @override
   Future<DateTime> get lastModified async {
@@ -70,7 +77,9 @@ class ServiceWorkerCacheEntry<T> extends LocalResource<T> {
     assert(resp is sw.Response);
     _response = await resp
         ?.cloneWith(headers: {_modifiedKey: DateTime.now().toIso8601String()});
-    _responseText = await resp?.text();
+    _responseContents = binary
+        ? (await resp?.arrayBuffer())?.asUint8List()
+        : await resp?.text();
     await (await cache)?.put(url, _response);
     return super.write(_response);
   }
@@ -83,7 +92,7 @@ class ServiceWorkerCacheEntry<T> extends LocalResource<T> {
 
   @override
   preParseContents(contents) =>
-      contents is sw.Response ? _responseText : contents;
+      contents is sw.Response ? _responseContents : contents;
 }
 
 bool _isValid(sw.Response response) {

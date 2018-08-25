@@ -1,3 +1,7 @@
+## [0.1.1] - August 25, 2018
+
+* Fix: catch platform layer errors (network/local) during `fetchContents()`.
+
 ## [0.1.0] - August 25, 2018
 
 * Fix `ServiceWorkerCacheEntry`. Bundled classes have undergone limited testing.

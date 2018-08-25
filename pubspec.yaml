@@ -1,6 +1,6 @@
 name: async_resource
 description: Automatically cache network resources and use them when offline. Interface with local resources on any platform.
-version: 0.0.5+1
+version: 0.1.0
 author: Jacob Phillips <jifalops@gmail.com>
 homepage: https://github.com/jifalops/async_resource
 

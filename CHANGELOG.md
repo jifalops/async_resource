@@ -1,3 +1,7 @@
+## [0.1.0] - August 25, 2018
+
+* Fix `ServiceWorkerCacheEntry`. Bundled classes have undergone limited testing.
+
 ## [0.0.5] - August 14, 2018
 
 * Add `data` getter and `parser` parameter to `NetworkResource`.

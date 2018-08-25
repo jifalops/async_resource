@@ -27,6 +27,12 @@ abstract class AsyncResource<T> {
   /// Returns a [String] or [List<int>], depending on whether the underlying
   /// resource is binary or string based.
   Future<dynamic> fetchContents();
+
+  Future<dynamic> _tryFetchContents() async {
+    try {
+      return await fetchContents();
+    } catch (ignored) {}
+  }
 }
 
 /// A local resources such as a native file or browser cache.
@@ -46,7 +52,7 @@ abstract class LocalResource<T> extends AsyncResource<T> {
   @override
   Future<T> get({bool forceReload: false}) async {
     if (_data == null || forceReload) {
-      _update(await fetchContents());
+      _update(await _tryFetchContents());
     }
     return _data;
   }
@@ -153,7 +159,7 @@ abstract class NetworkResource<T> extends AsyncResource<T> {
         strategy == CacheStrategy.networkFirst ||
         await isExpired) {
       print('${cache.basename}: Fetching from $url');
-      final contents = await fetchContents();
+      final contents = await _tryFetchContents();
       if (contents != null) {
         print('$url Fetched.');
         if (!skipCacheWrite) {

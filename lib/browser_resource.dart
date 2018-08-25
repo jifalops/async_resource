@@ -89,8 +89,11 @@ class ServiceWorkerCacheEntry<T> extends LocalResource<T> {
   }
 
   @override
-  preParseContents(contents) =>
-      contents is sw.Response ? _responseContents : contents;
+  preParseContents(contents) => contents is sw.Response
+      // From network
+      ? _responseContents
+      // From disk
+      : contents;
 }
 
 bool _isValid(sw.Response response) {

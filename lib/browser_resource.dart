@@ -57,10 +57,10 @@ class ServiceWorkerCacheEntry<T> extends LocalResource<T> {
   Future<bool> get isExpired async => hasExpired(await lastModified, maxAge);
 
   @override
-  Future fetchContents() async {
-    final resp = (await response)?.clone();
-    return binary ? (await resp?.arrayBuffer())?.asUint8List() : resp?.text();
-  }
+  Future fetchContents() async => _getContents((await response)?.clone());
+
+  Future _getContents(sw.Response resp) async =>
+      binary ? (await resp?.arrayBuffer())?.asUint8List() : resp?.text();
 
   @override
   Future<DateTime> get lastModified async {
@@ -77,9 +77,7 @@ class ServiceWorkerCacheEntry<T> extends LocalResource<T> {
     assert(resp is sw.Response);
     _response = await resp
         ?.cloneWith(headers: {_modifiedKey: DateTime.now().toIso8601String()});
-    _responseContents = binary
-        ? (await resp?.arrayBuffer())?.asUint8List()
-        : await resp?.text();
+    _responseContents = await _getContents(resp);
     await (await cache)?.put(url, _response);
     return super.write(_response);
   }

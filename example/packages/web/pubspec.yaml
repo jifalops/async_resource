@@ -1,0 +1,16 @@
+name: async_resource_example_web
+description: An absolute bare-bones web app.
+# version: 1.0.0
+#homepage: https://www.example.com
+#author: Jacob Phillips <email@example.com>
+
+environment:
+  sdk: '>=2.0.0 <3.0.0'
+
+dependencies:
+  async_resource_example:
+    path: ../base
+
+dev_dependencies:
+  build_runner: ^0.10.0
+  build_web_compilers: ^0.4.0

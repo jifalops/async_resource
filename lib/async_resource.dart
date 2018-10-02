@@ -3,6 +3,7 @@ library async_resource;
 import 'dart:async';
 import 'package:path/path.dart' as p;
 import 'package:meta/meta.dart';
+import 'package:rxdart/rxdart.dart';
 
 export 'src/http_network_resource.dart';
 
@@ -17,6 +18,9 @@ abstract class AsyncResource<T> {
 
   /// The location (a path or url) of the resource.
   final String location;
+
+  /// Synchronously get the most recently loaded data.
+  T get data;
 
   /// Gets the most readily available data or refreshes it if [forceReload] is
   /// `true`.
@@ -39,7 +43,7 @@ abstract class AsyncResource<T> {
 abstract class LocalResource<T> extends AsyncResource<T> {
   LocalResource({@required String path, this.parser}) : super(location: path);
 
-  /// Synchronously get the most recently loaded data.
+  @override
   T get data => _data;
   T _data;
 
@@ -129,6 +133,7 @@ abstract class NetworkResource<T> extends AsyncResource<T> {
   /// This parser will override the [cache.parser].
   final Parser<T> parser;
 
+  @override
   T get data => cache.data;
 
   /// The location of the data to fetch and cache.
@@ -190,4 +195,28 @@ bool hasExpired(DateTime date, Duration maxAge) {
   return date == null
       ? true
       : (maxAge == null ? false : new DateTime.now().difference(date) > maxAge);
+}
+
+/// Wraps an [AsyncResource], providing a stream of its outputs and a sink tied
+/// to [AsyncResource.get()].
+class StreamedResource<T> {
+  StreamedResource(this.resource) {
+    _controller.stream.listen((forceReload) =>
+        resource.get(forceReload: forceReload).then(_stream.add));
+  }
+  final AsyncResource<T> resource;
+  final _controller = StreamController<bool>();
+  final _stream = BehaviorSubject<T>();
+
+  void dispose() {
+    _controller.close();
+    _stream.close();
+  }
+
+  /// The value passed will be forwarded to
+  /// [AsyncResource.get(forceReload: value)].
+  Sink<bool> get sink => _controller.sink;
+
+  /// The output stream of values retrieved from [AsyncResource.get()].
+  Stream<T> get stream => _stream.stream;
 }

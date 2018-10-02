@@ -134,7 +134,7 @@ abstract class NetworkResource<T> extends AsyncResource<T> {
   final Parser<T> parser;
 
   @override
-  T get data => cache.data;
+  T get data => cache._data;
 
   /// The location of the data to fetch and cache.
   String get url => location;

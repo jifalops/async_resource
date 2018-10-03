@@ -203,12 +203,8 @@ bool hasExpired(DateTime date, Duration maxAge) {
 /// Remember to initialize the stream after it is created. For example:
 ///
 /// ```
-/// @override
-/// void initState() {
-///   super.initState();
-///   streamedResource = StreamedResource<String>(resource);
-///   streamedResource.sink.add(false);
-/// }
+/// res = StreamedResource<String>(resource);
+/// res.sink.add(false);
 /// ```
 class StreamedResource<T> {
   StreamedResource(this.resource) {

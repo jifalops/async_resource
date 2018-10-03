@@ -1,5 +1,4 @@
-import 'package:async_resource/async_resource.dart';
-import 'package:async_resource_flutter/helpers.dart';
+import 'package:async_resource_flutter/async_resource_flutter.dart';
 import 'package:flutter/material.dart';
 import 'resources.dart';
 

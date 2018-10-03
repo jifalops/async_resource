@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:async_resource_flutter/helpers.dart';
+import 'package:async_resource_flutter/async_resource_flutter.dart';
 import 'package:async_resource_example/config.dart';
 import 'src/resources.dart';
 import 'src/post_widgets.dart';

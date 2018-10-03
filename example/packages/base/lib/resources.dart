@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:async_resource/async_resource.dart';
-import 'package:async_resource_example/model/post.dart';
+import 'model/post.dart';
 
-export 'package:async_resource_example/model/post.dart';
+export 'model/post.dart';
 
 /// The resources required by mobile and web versions of the app.
 abstract class Resources {

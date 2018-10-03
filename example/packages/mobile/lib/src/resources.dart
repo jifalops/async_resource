@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:path_provider/path_provider.dart';
-import 'package:async_resource/file_resource.dart';
 import 'package:async_resource_flutter/async_resource_flutter.dart';
+import 'package:async_resource/file_resource.dart';
+
 import 'package:async_resource_example/resources.dart';
 import 'package:async_resource_example/config.dart';
 

@@ -8,8 +8,8 @@ import 'package:async_resource_example/config.dart';
 
 export 'package:async_resource_example/resources.dart';
 
-MobileResources _resources;
-MobileResources get resources => _resources;
+/// Shorthand for `MobileResources.instance`.
+MobileResources get resources => MobileResources._instance;
 
 class MobileResources extends Resources {
   MobileResources._(this.path)
@@ -26,7 +26,10 @@ class MobileResources extends Resources {
 
   final String path;
 
+  static MobileResources _instance;
+  static MobileResources get instance => _instance;
+
   /// Do one-time initialization of [resources].
-  static Future<MobileResources> init() async => _resources ??=
+  static Future<MobileResources> init() async => _instance ??=
       MobileResources._((await getApplicationDocumentsDirectory()).path);
 }

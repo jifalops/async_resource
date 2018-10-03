@@ -8,6 +8,7 @@ void main() {
   final CheckboxInputElement checkbox = querySelector('#isDark');
   final streamTab = querySelector('#streamTab');
   final futureTab = querySelector('#futureTab');
+  final content = querySelector('#content');
 
   resources.darkBackground.get().then((isDark) {
     checkbox.checked = isDark;
@@ -19,7 +20,14 @@ void main() {
     resources.darkBackground.write('${checkbox.checked}');
   });
 
+  void makePosts(Iterable<Post> posts) {
+    content.innerHtml = '';
+    content.children
+        .addAll(posts.map((post) => DivElement()..innerHtml = postHtml(post)));
+  }
+
   void fetchPosts() {
+    content.text = 'Fetching posts...';
     if (streamTab.className == 'active') {
       final resource = StreamedResource(resources.posts);
       resource.sink.add(false);
@@ -43,15 +51,6 @@ void main() {
       fetchPosts();
     }
   });
-
-  fetchPosts();
-}
-
-void makePosts(Iterable<Post> posts) {
-  final content = querySelector('#content');
-  content.innerHtml = '';
-  content.children
-      .addAll(posts.map((post) => DivElement()..innerHtml = postHtml(post)));
 }
 
 String postHtml(Post post) => '''

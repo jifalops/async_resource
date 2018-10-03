@@ -1,8 +1,3 @@
 # async_resource_example_mobile
 
-A new Flutter project.
-
-## Getting Started
-
-For help getting started with Flutter, view our online
-[documentation](https://flutter.io/).
+The mobile (Flutter) version of the app. It shows how to use various classes in the `async_resource_flutter` package.

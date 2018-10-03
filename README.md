@@ -4,6 +4,17 @@ Automatically cache network resources and use them when offline. Interface with 
 
 ## Examples
 
+See also the [working example](https://github.com/jifalops/async_resource/tree/master/example).
+
+### Wrapping in a stream
+
+```dart
+// `res` is any AsyncResource.
+final resource = StreamedResource(res);
+resource.sink.add(false);
+```
+
+
 ### Flutter and native
 
 Import `FileResource`.

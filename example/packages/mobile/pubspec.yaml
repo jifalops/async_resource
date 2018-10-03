@@ -17,8 +17,7 @@ dependencies:
     sdk: flutter
   async_resource_example:
     path: ../base
-  async_resource_flutter:
-    path: ../../../../async_resource_flutter
+  async_resource_flutter: any
   path_provider: ^0.4.1
 
   # The following adds the Cupertino Icons font to your application.

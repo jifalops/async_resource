@@ -203,13 +203,15 @@ bool hasExpired(DateTime date, Duration maxAge) {
 /// Remember to initialize the stream after it is created. For example:
 ///
 /// ```
-/// res = StreamedResource<String>(resource);
+/// res = StreamedResource(resource);
 /// res.sink.add(false);
 /// ```
 class StreamedResource<T> {
   StreamedResource(this.resource) {
-    _controller.stream.listen((forceReload) =>
-        resource.get(forceReload: forceReload).then(_updateStream));
+    _controller.stream.listen(
+        (forceReload) => resource.get(forceReload: forceReload).then((data) {
+              if (!_stream.isClosed) _stream.add(data);
+            }));
   }
   final AsyncResource<T> resource;
   final _controller = StreamController<bool>();
@@ -218,10 +220,6 @@ class StreamedResource<T> {
   void dispose() {
     _controller.close();
     _stream.close();
-  }
-
-  void _updateStream(T data) {
-    if (!_stream.isClosed) _stream.add(data);
   }
 
   /// The value passed will be forwarded to

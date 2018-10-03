@@ -8,8 +8,7 @@ environment:
   sdk: '>=2.0.0 <3.0.0'
 
 dependencies:
-  async_resource:
-    path: ../../..
+  async_resource: any
   json_annotation: ^1.2.0
   meta: ^1.1.6
 

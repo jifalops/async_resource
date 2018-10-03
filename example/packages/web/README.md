@@ -1,4 +1,3 @@
-An absolute bare-bones web app.
+# async_resource_example_web
 
-Created from templates made available by Stagehand under a BSD-style
-[license](https://github.com/dart-lang/stagehand/blob/master/LICENSE).
+The web version of a mobile+web app that uses the `async_resource` package.

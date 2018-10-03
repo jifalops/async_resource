@@ -6,6 +6,9 @@ import 'model/post.dart';
 export 'model/post.dart';
 
 /// The resources required by mobile and web versions of the app.
+///
+/// This isn't really necessary to do, but it helps make sure mobile and web
+/// versions of the app are consistent, and makes designing a bit easier.
 abstract class Resources {
   Resources({@required this.posts, @required this.darkBackground});
 

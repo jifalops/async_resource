@@ -1,3 +1,8 @@
+## [0.1.3] - October 3, 2018
+
+* Add `StreamedResource` for wrapping an AsyncResource with a sink and stream.
+* Added a fully functional example that uses this package and `async_resource_flutter`.
+
 ## [0.1.2] - August 25, 2018
 
 * Add examples to README.

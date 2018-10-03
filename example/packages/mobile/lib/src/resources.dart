@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:path_provider/path_provider.dart';
 import 'package:async_resource/file_resource.dart';
 import 'package:async_resource_flutter/async_resource_flutter.dart';
 import 'package:async_resource_example/resources.dart';
@@ -24,11 +25,7 @@ class MobileResources extends Resources {
 
   final String path;
 
-  /// To be called by the app when a path for writing files to is known.
-  /// This is typically [getApplicationDocumentsDirectory()] or
-  /// [getExternalStorageDirectory()] from the `path_provider` package.
-  static Future<MobileResources> init(String path) async =>
-      _resources ??= MobileResources._(path);
+  /// Do one-time initialization of [resources].
+  static Future<MobileResources> init() async => _resources ??=
+      MobileResources._((await getApplicationDocumentsDirectory()).path);
 }
-
-

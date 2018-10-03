@@ -199,10 +199,21 @@ bool hasExpired(DateTime date, Duration maxAge) {
 
 /// Wraps an [AsyncResource], providing a stream of its outputs and a sink tied
 /// to [AsyncResource.get()].
+///
+/// Remember to initialize the stream after it is created. For example:
+///
+/// ```
+/// @override
+/// void initState() {
+///   super.initState();
+///   streamedResource = StreamedResource<String>(resource);
+///   streamedResource.sink.add(false);
+/// }
+/// ```
 class StreamedResource<T> {
   StreamedResource(this.resource) {
     _controller.stream.listen((forceReload) =>
-        resource.get(forceReload: forceReload).then(_stream.add));
+        resource.get(forceReload: forceReload).then(_updateStream));
   }
   final AsyncResource<T> resource;
   final _controller = StreamController<bool>();
@@ -211,6 +222,10 @@ class StreamedResource<T> {
   void dispose() {
     _controller.close();
     _stream.close();
+  }
+
+  void _updateStream(T data) {
+    if (!_stream.isClosed) _stream.add(data);
   }
 
   /// The value passed will be forwarded to

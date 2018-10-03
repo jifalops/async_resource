@@ -18,6 +18,11 @@ class Post {
   final String title;
   final String body;
 
-  static Iterable<Post> fromJsonArray(String jsonString) =>
-      json.decode(jsonString).map((map) => Post.fromJson(map));
+  static Iterable<Post> fromJsonArray(String jsonString) {
+    List posts = json.decode(jsonString);
+    return posts.map((item) {
+      final post = Post.fromJson(item as Map<String, dynamic>);
+      return post;
+    });
+  }
 }

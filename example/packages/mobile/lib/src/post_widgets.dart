@@ -1,14 +1,17 @@
 import 'package:async_resource/async_resource.dart';
-import 'package:async_resource_flutter/async_resource_flutter.dart';
-import 'package:async_resource_example/resources.dart';
+import 'package:async_resource_flutter/helpers.dart';
 import 'package:flutter/material.dart';
 import 'resources.dart';
 
+/// Exposing this to `main.dart`. This is bad practice and for the example only.
+Color textColor = Colors.black;
+
 Widget _buildPost(Post post) => ListTile(
-      title: Text(post.title),
-      subtitle: Text(post.body),
-      leading: Text('${post.id}'),
-      trailing: Text('user ${post.userId}'),
+      title: Text('${post?.title}', style: TextStyle(color: textColor)),
+      subtitle: Text('${post?.body}', style: TextStyle(color: textColor)),
+      leading: Text('${post?.id}', style: TextStyle(color: textColor)),
+      trailing:
+          Text('user ${post?.userId}', style: TextStyle(color: textColor)),
     );
 
 /// Since [AsyncResource] uses [Future]s instead of [Stream]s, it only needs to
@@ -24,7 +27,7 @@ class PostsWithHelpers extends StatelessWidget {
           future: resources.posts.get(),
           initialData: resources.posts.data,
           handler: (context, posts) =>
-              ListView(children: posts.map(_buildPost)),
+              ListView(children: posts.map(_buildPost).toList()),
         ),
       );
 }
@@ -39,7 +42,8 @@ class PostsWithoutHelpers extends StatelessWidget {
             initialData: resources.posts.data,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return ListView(children: snapshot.data.map(_buildPost));
+                return ListView(
+                    children: snapshot.data.map(_buildPost).toList());
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
               } else {
@@ -67,7 +71,7 @@ class StreamedPostsWithHelpers extends StatelessWidget {
                     ResourceProvider.of(context).sink.add(true),
                 child: ResourceWidget<Iterable<Post>>(
                   (context, posts) => ListView(
-                        children: posts.map(_buildPost),
+                        children: posts.map(_buildPost).toList(),
                       ),
                 ),
               ),
@@ -107,7 +111,7 @@ class _StreamedPostsWithoutHelpersState
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         return ListView(
-                            children: snapshot.data.map(_buildPost));
+                            children: snapshot.data.map(_buildPost).toList());
                       } else if (snapshot.hasError) {
                         return Text('${snapshot.error}');
                       } else {
@@ -122,6 +126,7 @@ class _StreamedPostsWithoutHelpersState
   void initState() {
     super.initState();
     resource = StreamedResource(resources.posts);
+    resource.sink.add(false);
   }
 
   @override

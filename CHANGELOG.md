@@ -1,3 +1,8 @@
+## [0.1.4] - November 25, 2018
+
+* Add `data` getter to `StreamedResource`.
+* Update deps
+
 ## [0.1.3] - October 3, 2018
 
 * Add `StreamedResource` for wrapping an AsyncResource with a sink and stream.

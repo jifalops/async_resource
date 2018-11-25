@@ -96,11 +96,8 @@ class ServiceWorkerCacheEntry<T> extends LocalResource<T> {
       : contents;
 }
 
-bool _isValid(sw.Response response) {
-  if (response == null) return false;
-  if (response.type == 'error') return false;
-  return true;
-}
+bool _isValid(sw.Response response) =>
+    response == null ? false : response.type != 'error';
 
 /// A single entry in a [window.localStorage] or [window.sessionStorage] map.
 class StorageEntry<T> extends LocalResource<T> {

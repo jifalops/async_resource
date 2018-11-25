@@ -217,6 +217,9 @@ class StreamedResource<T> {
   final _controller = StreamController<bool>();
   final _stream = BehaviorSubject<T>();
 
+  /// Synchronously get's the underlying resource's current data.
+  T get data => resource.data;
+
   void dispose() {
     _controller.close();
     _stream.close();

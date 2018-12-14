@@ -43,7 +43,7 @@ class HttpNetworkResource<T> extends NetworkResource<T> {
     final response = await (client == null
         ? http.get(url, headers: headers)
         : client.get(url, headers: headers));
-    return (response != null)
+    return (response != null && acceptedResponses.contains(response.statusCode))
         ? (binary ? response.bodyBytes : response.body)
         : null;
   }

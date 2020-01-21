@@ -85,6 +85,35 @@ class _MyDataViewState extends State<MyDataView> {
 }
 ```
 
+### Flutter Using MMKV
+
+MMKV used is from https://pub.dartlang.org/packages/flutter_mmkv
+
+MMKV is really fast and can get the data stored in just 3-5 milliseconds, really fast.
+
+import `MMKVResource`.
+
+```dart
+import 'package:async_resource/mmkv_resource.dart';
+```
+
+Define a resource.
+
+```dart
+// Flutter needs a valid directory to write to.
+// `getApplicationDocumentsDirectory()` is in the `path_provider` package.
+// Native applications do not need this step.
+final path = (await getApplicationDocumentsDirectory()).path;
+
+final myDataResource = HttpNetworkResource<MyData>(
+  url: 'https://example.com/my-data.json',
+  parser: (contents) => MyData.fromJson(contents),
+  cache: MMKVResource('my_key','$path/my_key'),
+  maxAge: Duration(minutes: 60),
+  strategy: CacheStrategy.cacheFirst,
+);
+```
+
 ### Flutter using Shared Preferences
 
 Import `SharedPrefsResource`.
